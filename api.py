@@ -35,11 +35,40 @@ class ElevesList(Resource):
         data = request.get_json()
         self.db.insert(data)
 
+# Articles / Blog
+class Blog(Resource):
+    def __init__(self):
+        self.db = Database()
+
+    def get(self):
+        return jsonify(self.db.blog())
+
+    def post(self):
+        data = request.get_json()
+        self.db.insert(data)
+    
+class Article(Resource):
+    def __init__(self):
+        self.db = Database()
+
+    def delete(self, eleve_id):
+        self.db.delete(article_id)
+
+    def put(self, eleve_id):
+        data = request.get_json()
+        self.db.update(article_id, data)
+
 ##
 ## Actually setup the Api resource routing here
 ##
 api.add_resource(ElevesList, '/eleves')
 api.add_resource(Eleve, '/eleves/<eleve_id>')
+## route trombinoscope
+api.add_resource(ElevesList, '/trombinoscope')
+## route article
+api.add_resource(Blog, '/blog')
+api.add_resource(Article, '/blog/<article_id>')
+
 
 
 if __name__ == '__main__':
