@@ -10,16 +10,7 @@ class Database:
                                    DictCursor)
         self.cursor = self.con.cursor()
     def list_eleves(self):
-        self.cursor.execute("SELECT id, "
-                            "nom, "
-                            "prenom, "
-                            "url_image, "
-                            "date_naissance, "
-                            "date_debut ,"
-                            "date_fin,"
-                            "nom_promotion"
-                            "FROM eleve"
-                            "INNER JOIN promotion ON promotion.id = eleve.id_promotion")
+        self.cursor.execute("SELECT id, nom, prenom, url_image, date_naissance nompromotion FROM eleve")
         result = self.cursor.fetchall()
         return result
 
