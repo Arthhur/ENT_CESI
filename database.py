@@ -116,3 +116,51 @@ class Database:
         data = (nom, debut, fin, id)
         self.cursor.execute(sql, data)
 
+## Emploi du temps 
+    def list_edt(self):
+        self.cursor.execute("SELECT id, "
+                            "date, "
+                            "libelle, "
+                            "creneau, "
+                            "id_promotion, "
+                            "id_intervenant "
+                            "FROM emploi_du_temps"
+                            "INNER JOIN intervenant ON intervenant.id = emploi_du_temps.id_intervenant"
+                            "INNER JOIN promotion ON promotion.id = emploi_du_temps.id_promotion")
+        result = self.cursor.fetchall()
+        return result
+
+    def edt_by_day(self, date):
+        sql = "SELECT id, date, creneau, id_promotion, id_intervenant FROM emploi_du_temps INNER JOIN promotion ON promotion.id = emploi_du_temps.id_promotion INNER JOIN intervenant ON intervenant.id = emploi_du_temps.id_intervenant WHERE emploi_du_temps.date = %s"
+        self.cursor.execute(sql, date)
+        result = self.cursor.fetchall()
+        return result
+    
+    def edt_update(self, emploi_du_temps.id, emploi_du_temps):
+        libelle = emploi_du_temps.get('libelle')
+        date = emploi_du_temps.get('date')
+        creneau = emploi_du_temps.get('creneau')
+        id_intervenant = emploi_du_temps.get('id_intervenant')
+        id_promotion = emploi_du_temps.get('id_promotion')
+        id = emploi_du_temps.get('id')
+        sql = "UPDATE emploi_du_temps SET libelle = %s, date = %s, creneau = %s, id_intervenant = %s, id_promotion = %s  WHERE emploi_du_temps.id = %s"
+        data = (libelle, date, creneau,  id_intervenant, id_promotion, id)
+        self.cursor.execute(sql, data)
+
+    def edt_insert(self, edt):
+        libelle = edt.get('libelle')
+        date = edt.get('date')
+        creneau = edt.get('creneau')
+        id_promotion = edt.get('id_promotion')
+        id_intervenant = edt.get('id_intervenant')
+        sql = "INSERT INTO emploi_du_temps (libelle, date, creneau, id_promotion, id_intervenant) VALUES (%s, %s, %s, %s, %s)"
+        data = (libelle, date, creneau, id_promotion, id_intervenant)
+        self.cursor.execute(sql, data)
+        self.con.commit()
+
+    def edt_delete(self, edt_id):
+        sql = "DELETE FROM emploi_du_temps WHERE id = %s"
+        self.cursor.execute(sql, edt_id)
+        self.con.commit()
+        print(self.cursor.rowcount, " record(s) deleted")
+## Fin EMPLOI DU TEMPS    

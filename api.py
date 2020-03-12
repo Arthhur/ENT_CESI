@@ -57,10 +57,10 @@ class Article(Resource):
     def __init__(self):
         self.db = Database()
 
-    def delete(self, eleve_id):
+    def delete(self, article_id):
         self.db.delete(article_id)
 
-    def put(self, eleve_id):
+    def put(self, article_id):
         data = request.get_json()
         self.db.update(article_id, data)
 
@@ -96,7 +96,33 @@ class PromotionList(Resource):
         data = request.get_json()
         self.db.promotion_insert(data)
 
+## EDT
+class EdtList(Resource):
+    def __init__(self):
+        self.db = Database()
 
+    def get(self):
+        return jsonify(self.db.list_edt())
+
+class Edt(Resource):
+    def __init__(self):
+        self.db = Database()
+
+    def get(self, date):
+        return jsonify(self.db.edt_by_day(date))
+
+    def delete(self, edt_id):
+        self.db.edt_delete(edt_id)
+
+    def put(self, id):
+        data = request.get_json()
+        self.db.edt_update(id, data)
+
+    def post(self, edt):
+        data = request.get_json()
+        self.db.edt_insert(self, edt)
+
+## FIN EDT
 ##
 ## Actually setup the Api resource routing here
 ##
@@ -107,6 +133,10 @@ api.add_resource(Promotion, '/promotions/<promotion_id>')
 ## route article
 api.add_resource(Blog, '/blog')
 api.add_resource(Article, '/blog/<article_id>')
+
+##  route edt
+api.add_resource(EmploiDuTemps, '/edt')
+api.add_resource(EdtJour, '/edt/<date>')
 
 if __name__ == '__main__':
     app.run(debug=True)
