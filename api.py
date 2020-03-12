@@ -135,8 +135,8 @@ api.add_resource(Blog, '/blog')
 api.add_resource(Article, '/blog/<article_id>')
 
 ##  route edt
-api.add_resource(EmploiDuTemps, '/edt')
-api.add_resource(EdtJour, '/edt/<date>')
+api.add_resource(EdtList, '/edt')
+api.add_resource(Edt, '/edt/<date>')
 
 if __name__ == '__main__':
     app.run(debug=True)
