@@ -46,3 +46,34 @@ class Database:
         sql = "UPDATE eleve SET nom = %s, prenom = %s, url_image = %s, date_naissance = %s, id_promotion = %s WHERE eleve.id = %s"
         data = (nom, prenom, url_image, date_naissance, id_promotion, eleve_id)
         self.cursor.execute(sql, data)
+   ## Blog
+    def blog(self):
+        self.cursor.execute("SELECT id, "
+                            "date_publication, "
+                            "titre, "
+                            "contenu, "
+                            "categorie, "
+                            "id_eleve "
+                            "FROM article"
+                            "INNER JOIN eleve ON eleve.id = article.id_eleve")
+        result = self.cursor.fetchall()
+        return result
+
+    def article_by_id(self, article_id):
+        sql = "SELECT id, date_publication, titre, contenu, id_eleve, categorie FROM article INNER JOIN eleve ON eleve.id = article.id_eleve WHERE aricle.id = %s"
+        self.cursor.execute(sql, article_id)
+        result = self.cursor.fetchall()
+        return result
+
+    def insert(self, article):
+        titre = eleve.get('titre')
+        contenu = eleve.get('contenu')
+        date_publication = eleve.get('date_publication')
+        id_eleve = eleve.get('id_eleve')
+        categorie = eleve.get('categorie')
+        sql = "INSERT INTO article (titre, contenu, date_publication, id_eleve, categorie) VALUES (%s, %s, %s, %s, %s)"
+        data = (titre, contenu, date_publication, id_eleve, categorie)
+        self.cursor.execute(sql, data)
+        self.con.commit()
+
+    ## Fin Blog
