@@ -11,14 +11,10 @@ api = Api(app)
 cors = CORS(app)
 parser = reqparse.RequestParser()
 
-
 # ElevesList
 class Eleve(Resource):
     def __init__(self):
         self.db = Database()
-
-    def get(self, eleve_id):
-        return jsonify(self.db.eleve_by_id(eleve_id))
 
     def delete(self, eleve_id):
         self.db.delete(eleve_id)
@@ -39,7 +35,6 @@ class ElevesList(Resource):
         data = request.get_json()
         self.db.insert(data)
 
-
 # Articles / Blog
 class Blog(Resource):
     def __init__(self):
@@ -51,62 +46,28 @@ class Blog(Resource):
     def post(self):
         data = request.get_json()
         self.db.insert(data)
-
-
+    
 class Article(Resource):
     def __init__(self):
         self.db = Database()
 
-    def delete(self, eleve_id):
+    def delete(self, article_id):
         self.db.delete(article_id)
 
-    def put(self, eleve_id):
+    def put(self, article_id):
         data = request.get_json()
         self.db.update(article_id, data)
-
-
-# Promotions
-class Promotion(Resource):
-    def __init__(self):
-        self.db = Database()
-
-    def get(self, promotion_id):
-        return jsonify(self.db.promotion_by_id(promotion_id))
-
-    def delete(self, promotion_id):
-        self.db.promotion_delete(promotion_id)
-
-    def put(self, promotion_id):
-        data = request.get_json()
-        self.db.promotion_update(id, data)
-
-    def post(self, promotion):
-        data = request.get_json()
-        self.db.promotion_insert(self, promotion)
-
-
-class PromotionList(Resource):
-    def __init__(self):
-        self.db = Database()
-
-    def get(self):
-        return jsonify(self.db.list_promotions())
-
-    def post(self):
-        data = request.get_json()
-        self.db.promotion_insert(data)
-
 
 ##
 ## Actually setup the Api resource routing here
 ##
 api.add_resource(ElevesList, '/eleves')
 api.add_resource(Eleve, '/eleves/<eleve_id>')
-api.add_resource(PromotionList, '/promotions')
-api.add_resource(Promotion, '/promotions/<promotion_id>')
 ## route article
 api.add_resource(Blog, '/blog')
 api.add_resource(Article, '/blog/<article_id>')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

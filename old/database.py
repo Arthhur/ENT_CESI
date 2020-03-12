@@ -10,12 +10,12 @@ class Database:
                                    DictCursor)
         self.cursor = self.con.cursor()
     def list_eleves(self):
-        self.cursor.execute("SELECT eleve.id, nom, prenom, url_image, date_naissance, date_debut , date_fin, libelle FROM eleve INNER JOIN promotion ON promotion.id = eleve.promotion_id ")
+        self.cursor.execute("SELECT id, nom, prenom, url_image, date_naissance nompromotion FROM eleve")
         result = self.cursor.fetchall()
         return result
 
     def eleve_by_id(self, eleve_id):
-        sql = "SELECT eleve.id, nom, prenom, url_image, date_naissance, date_debut , date_fin, libelle FROM eleve INNER JOIN promotion ON promotion.id = eleve.promotion_id WHERE eleve.id = %s"
+        sql = "SELECT id, nom, prenom, url_image, date_naissance, date_debut , date_fin, nompromotion FROM eleve INNER JOIN promotion ON promotion.id = eleve.id_promotion WHERE eleve.id = %s"
         self.cursor.execute(sql, eleve_id)
         result = self.cursor.fetchall()
         return result
@@ -31,8 +31,8 @@ class Database:
         prenom = eleve.get('prenom')
         url_image = eleve.get('url_image')
         date_naissance = eleve.get('date_naissance')
-        id_promotion = eleve.get('promotion_id')
-        sql = "INSERT INTO eleve (nom, prenom, url_image, date_naissance, promotion_id) VALUES (%s, %s, %s, %s, %s)"
+        id_promotion = eleve.get('id_promotion')
+        sql = "INSERT INTO eleve (nom, prenom, url_image, date_naissance, id_promotion) VALUES (%s, %s, %s, %s, %s)"
         data = (nom, prenom, url_image, date_naissance, id_promotion)
         self.cursor.execute(sql, data)
         self.con.commit()
@@ -42,12 +42,10 @@ class Database:
         prenom = eleve.get('prenom')
         url_image = eleve.get('url_image')
         date_naissance = eleve.get('date_naissance')
-        promotion_id = eleve.get('promotion_id')
-        sql = "UPDATE eleve SET nom = %s, prenom = %s, url_image = %s, date_naissance = %s, promotion_id = %s WHERE eleve.id = %s"
-        data = (nom, prenom, url_image, date_naissance, promotion_id, eleve_id)
+        id_promotion = eleve.get('id_promotion')
+        sql = "UPDATE eleve SET nom = %s, prenom = %s, url_image = %s, date_naissance = %s, id_promotion = %s WHERE eleve.id = %s"
+        data = (nom, prenom, url_image, date_naissance, id_promotion, eleve_id)
         self.cursor.execute(sql, data)
-
-
    ## Blog
     def blog(self):
         self.cursor.execute("SELECT id, "
@@ -79,40 +77,3 @@ class Database:
         self.con.commit()
 
     ## Fin Blog
-
-#PROMOTION
-    def list_promotions(self):
-        self.cursor.execute("SELECT id, libelle, date_debut, date_fin FROM promotion")
-        result = self.cursor.fetchall()
-        return result
-
-    def promotion_by_id(self, promotion_id):
-        sql = "SELECT id, libelle, date_debut, date_fin FROM promotion WHERE promotion.id = %s"
-        self.cursor.execute(sql, promotion_id)
-        result = self.cursor.fetchall()
-        return result
-
-    def promotion_delete(self, promotion_id):
-        sql = "DELETE FROM promotion WHERE id = %s"
-        self.cursor.execute(sql, promotion_id)
-        self.con.commit()
-        print(self.cursor.rowcount, " record(s) deleted")
-
-    def promotion_insert(self, promotion):
-        nom = promotion.get('libelle')
-        debut = promotion.get('date_debut')
-        fin = promotion.get('date_fin')
-        sql = "INSERT INTO promotion (libelle, date_debut, date_fin) VALUES (%s, %s, %s)"
-        data = (nom, debut, fin)
-        self.cursor.execute(sql, data)
-        self.con.commit()
-
-    def promotion_update(self, promotion_id, promotion):
-        nom = promotion.get('libelle')
-        debut = promotion.get('date_debut')
-        fin = promotion.get('date_fin')
-        id = promotion.get('id')
-        sql = "UPDATE promotion SET libelle = %s, date_debut = %s, date_fin = %s WHERE promotion.id = %s"
-        data = (nom, debut, fin, id)
-        self.cursor.execute(sql, data)
-
