@@ -27,6 +27,9 @@ class Eleve(Resource):
         data = request.get_json()
         self.db.update(eleve_id, data)
 
+    def post(self, eleve_id):
+        data = request.get_json()
+        self.db.insert(eleve_id, data)
 
 class ElevesList(Resource):
     def __init__(self):
@@ -39,6 +42,36 @@ class ElevesList(Resource):
         data = request.get_json()
         self.db.insert(data)
 
+# IntervenantsList
+class Intervenant(Resource):
+    def __init__(self):
+        self.db = Database()
+
+    def get(self, intervenant_id):
+        return jsonify(self.db.intervenant_by_id(intervenant_id))
+
+    def delete(self, intervenant_id):
+        self.db.intervenant_delete(intervenant_id)
+
+    def put(self, intervenant_id):
+        data = request.get_json()
+        self.db.intervenant_update(intervenant_id, data)
+
+    def post(self):
+        data = request.get_json()
+        self.db.intervenant_insert(data)
+
+
+class IntervenantsList(Resource):
+    def __init__(self):
+        self.db = Database()
+
+    def get(self):
+        return jsonify(self.db.list_intervenants())
+
+    def post(self):
+        data = request.get_json()
+        self.db.insert(data)
 
 # Articles / Blog
 class Blog(Resource):
@@ -50,7 +83,7 @@ class Blog(Resource):
 
     def post(self):
         data = request.get_json()
-        self.db.insert(data)
+        return jsonify(self.db.insert(data))
 
 
 class Article(Resource):
@@ -96,7 +129,7 @@ class PromotionList(Resource):
         data = request.get_json()
         self.db.promotion_insert(data)
 
-## EDT
+
 class EdtList(Resource):
     def __init__(self):
         self.db = Database()
@@ -114,29 +147,38 @@ class Edt(Resource):
     def delete(self, edt_id):
         self.db.edt_delete(edt_id)
 
-    def put(self, id):
+    def put(self, edt_id):
         data = request.get_json()
-        self.db.edt_update(id, data)
+        self.db.edt_update(edt_id, data)
 
     def post(self, edt):
         data = request.get_json()
         self.db.edt_insert(self, edt)
 
-## FIN EDT
+class Auth(Resource):
+    def __init__(self):
+        self.db = Database()
+
+    def post(self):
+        data = request.get_json()
+        return jsonify(self.db.auth(data))
 ##
 ## Actually setup the Api resource routing here
 ##
 api.add_resource(ElevesList, '/eleves')
 api.add_resource(Eleve, '/eleves/<eleve_id>')
+## route intervenants
+api.add_resource(IntervenantsList, '/intervenants')
+api.add_resource(Intervenant, '/intervenants/<intervenant_id>')
+## route promotions
 api.add_resource(PromotionList, '/promotions')
 api.add_resource(Promotion, '/promotions/<promotion_id>')
 ## route article
-api.add_resource(Blog, '/blog')
+api.add_resource(Blog, '/blogs')
 api.add_resource(Article, '/blog/<article_id>')
+## route authentification
+api.add_resource(Auth, '/auth')
 
-##  route edt
-api.add_resource(EdtList, '/edt')
-api.add_resource(Edt, '/edt/<date>')
 
 if __name__ == '__main__':
     app.run(debug=True)
